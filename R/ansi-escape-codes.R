@@ -56,3 +56,11 @@ col2code <- function(rcolour) {
   ifelse(is_grey & !possibly_white, grey_code, colour_code)
 }
 
+
+fg2bg <- function(x) {
+  paste0("\033[48;", substr(x, 6, 16))
+}
+
+bg2fg <- function(x) {
+  paste0("\033[38;", substr(x, 6, 16))
+}

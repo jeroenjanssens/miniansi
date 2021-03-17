@@ -440,13 +440,6 @@ ANSI <- R6::R6Class(
                             reverse_threshold = 0.4, ...) {
 
       #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      # Is user just wants intensity mapped to ASCII chars, then do that
-      #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      if (plain_ascii) {
-        return(self$as_character_ascii(pow = pow, char_lookup_table = char_lookup_table, ...))
-      }
-
-      #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       # smash together the bg, fg and text layers
       #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       if (identical(self$ansi_bits, 24L)) {
@@ -458,17 +451,22 @@ ANSI <- R6::R6Class(
       }
 
       #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      # Find dark background and set the corresponding foreground to white
+      # Add ASCII characters with same foreground as background
       #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      col       <- col2rgb(self$bg)
-      intensity <- (0.3 * col[1,] + 0.59 * col[2,] + 0.11 * col[3,])/255
-      idx       <- intensity < reverse_threshold
-      fg[idx]   <- col2fg('white')
+      if (plain_ascii) {
+        all_chr <- colmat2char(self$bg, pow = pow,
+                               char_lookup_table = char_lookup_table)
+        idx <- self$chr == ' '
+        all_chr[!idx] <- self$chr[!idx]
+        fg[idx] <- bg2fg(bg[idx])
+      } else {
+        all_chr <- self$chr
+      }
 
       #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       # smash together the bg, fg and text layers
       #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      mat <- paste0(bg, fg, self$chr)
+      mat <- paste0(bg, fg, all_chr)
 
       #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       # Make sure the output matrix is the correct shape
