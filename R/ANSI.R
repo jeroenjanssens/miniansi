@@ -434,10 +434,13 @@ ANSI <- R6::R6Class(
     #' @param reverse_threshold black text on a dark background is mostly invisible.
     #'        Any text on a bg colour below this intensity will be changed to
     #'        a text colour of white. Set to 0 to disable this effect. Default: 0.4
+    #' @param colour Wrap each character in ANSI colour codes. Set to FALSE
+    #'        to get plain text, e.g. together with \code{plain_ascii=TRUE}.
+    #'        Default: TRUE
     #' @param ... ignored
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     as_character = function(plain_ascii = FALSE, pow = 1, char_lookup_table = 1,
-                            reverse_threshold = 0.4, ...) {
+                            reverse_threshold = 0.4, colour = TRUE, ...) {
 
       #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       # smash together the bg, fg and text layers
@@ -461,6 +464,14 @@ ANSI <- R6::R6Class(
         fg[idx] <- bg2fg(bg[idx])
       } else {
         all_chr <- self$chr
+      }
+
+      #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      # Plain text: no escape codes at all
+      #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      if (!colour) {
+        dim(all_chr) <- dim(self$bg)
+        return(collapse_matrix_to_string(all_chr))
       }
 
       #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

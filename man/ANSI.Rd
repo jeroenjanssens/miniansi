@@ -323,6 +323,7 @@ Character representation with ANSI colouring}
   pow = 1,
   char_lookup_table = 1,
   reverse_threshold = 0.4,
+  colour = TRUE,
   ...
 )}\if{html}{\out{</div>}}
 }
@@ -342,6 +343,10 @@ ANSI output.  Default: FALSE}
 \item{\code{reverse_threshold}}{black text on a dark background is mostly invisible.
 Any text on a bg colour below this intensity will be changed to
 a text colour of white. Set to 0 to disable this effect. Default: 0.4}
+
+\item{\code{colour}}{Wrap each character in ANSI colour codes. Set to FALSE
+to get plain text, e.g. together with \code{plain_ascii=TRUE}.
+Default: TRUE}
 
 \item{\code{...}}{ignored
 Save to file}
