@@ -1,7 +1,7 @@
 Package: miniansi
 Type: Package
 Title: Create Simple ANSI Documents
-Version: 0.1.1
+Version: 0.1.2
 Author: mikefc
 Maintainer: mikefc <mikefc@coolbutuseless.com>
 Description: Create simple ANSI documents.
