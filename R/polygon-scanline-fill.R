@@ -150,6 +150,15 @@ fill_polygon <- function(self, xs, ys, fill, debug = FALSE) {
 
   if (debug) dump_mat(mat)
 
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # A polygon with only horizontal edges (e.g. a box with zero height) is
+  # already drawn; there is nothing to scan
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  if (nrow(all_edges) == 0) {
+    if (debug) return(mat)
+    return(NULL)
+  }
+
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # For each 'y' scanline
